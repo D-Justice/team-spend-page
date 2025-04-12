@@ -5,12 +5,14 @@ interface IValues {
   name: string;
   email: string;
   message: string;
+  employees: string;
 }
 
 const initialValues: IValues = {
   name: "",
   email: "",
   message: "",
+  employees: "",
 };
 
 export const useForm = (validate: { (values: IValues): IValues }) => {
@@ -28,7 +30,7 @@ export const useForm = (validate: { (values: IValues): IValues }) => {
     const errors = validate(values);
     setFormState((prevState) => ({ ...prevState, errors }));
 
-    const url = ""; // Fill in your API URL here
+    const url = "https://localhost:7216/email";
 
     try {
       if (Object.values(errors).every((error) => error === "")) {

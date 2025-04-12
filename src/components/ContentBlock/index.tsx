@@ -60,6 +60,17 @@ const ContentBlock = ({
                         },
                         id: number
                       ) => {
+                        if (item.title == "Get Started") {
+                          return (
+                            <Button
+                              key={id}
+                              color={item.color}
+                              onClick={() => scrollTo("contact")}
+                            >
+                              {t(item.title)}
+                            </Button>
+                          );
+                        }
                         return (
                           <Button
                             key={id}

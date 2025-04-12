@@ -1,0 +1,16 @@
+{
+  "title": "Know the Cost of Every Call",
+  "text": "Understand exactly how much each Microsoft Teams meeting costs your business — in real dollars.",
+  "section": [
+    {
+      "title": "How do we do it?",
+      "content": "TeamSpend uses AI to estimate the average pay per hour for each user to determine the cost of their time in a call.",
+      "icon": "notes.svg"
+    },
+    {
+      "title": "Save time AND money",
+      "content": "Save your business money and your team time by bringing awareness surrounding the amount time spent in calls.",
+      "icon": "notes.svg"
+    }
+  ]
+}
