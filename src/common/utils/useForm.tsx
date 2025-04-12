@@ -30,7 +30,7 @@ export const useForm = (validate: { (values: IValues): IValues }) => {
     const errors = validate(values);
     setFormState((prevState) => ({ ...prevState, errors }));
 
-    const url = "https://localhost:7216/email";
+    const url = "https://meeting-cost.onrender.com/email";
 
     try {
       if (Object.values(errors).every((error) => error === "")) {
