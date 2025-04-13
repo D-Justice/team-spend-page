@@ -1,27 +1,40 @@
+// src/routes/Router.tsx
 import { lazy, Suspense } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
 import { Styles } from "../styles/styles";
+import ProtectedRoute from "../pages/protectedRoute";
 
 const Router = () => {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div>Loading...</div>}>
       <Styles />
       <Header />
-      <Switch>
+      <Routes>
         {routes.map((routeItem) => {
-          return (
-            <Route
-              key={routeItem.component}
-              path={routeItem.path}
-              exact={routeItem.exact}
-              component={lazy(() => import(`../pages/${routeItem.component}`))}
-            />
+          const LazyComponent = lazy(() =>
+            import(`../pages/${routeItem.component}`)
           );
+
+          const element = routeItem.protected ? (
+            <ProtectedRoute>
+              <LazyComponent />
+            </ProtectedRoute>
+          ) : (
+            <LazyComponent />
+          );
+
+          return routeItem.path.map((p: string) => (
+            <Route
+              key={p}
+              path={p}
+              element={element}
+            />
+          ));
         })}
-      </Switch>
+      </Routes>
       <Footer />
     </Suspense>
   );

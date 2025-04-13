@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { notification } from "antd";
+import axios from "axios";
+import { config } from "../../services/config";
 
 interface IValues {
   name: string;
@@ -30,26 +32,31 @@ export const useForm = (validate: { (values: IValues): IValues }) => {
     const errors = validate(values);
     setFormState((prevState) => ({ ...prevState, errors }));
 
-    const url = "https://meeting-cost.onrender.com/email";
+    const url = config.url.API_URL;
 
     try {
       if (Object.values(errors).every((error) => error === "")) {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        });
-
-        if (!response.ok) {
-          notification["error"]({
-            message: "Error",
-            description:
-              "There was an error sending your message, please try again later.",
-          });
-        } else {
-          event.target.reset();
+        var token = localStorage.getItem("token");
+        if (token) {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
+        const response = await axios.post(`${url}/email`, 
+          values, 
+          {
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              withCredentials: true,
+          }
+      ).then(resp => {
+          if (resp.status != 200) {
+            notification["error"]({
+              message: "Error",
+              description:
+                "There was an error sending your message, please try again later.",
+            });
+          } else {
+            event.target.reset();
           setFormState(() => ({
             values: { ...initialValues },
             errors: { ...initialValues },
@@ -59,7 +66,7 @@ export const useForm = (validate: { (values: IValues): IValues }) => {
             message: "Success",
             description: "Your message has been sent!",
           });
-        }
+          }});
       }
     } catch (error) {
       notification["error"]({

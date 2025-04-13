@@ -15,14 +15,18 @@ import {
   Outline,
   Span,
 } from "./styles";
+import { useAuth } from "../../contexts/authContext";
 
 const Header = ({ t }: { t: TFunction }) => {
   const [visible, setVisibility] = useState(false);
-
+  const { user, loading, logout } = useAuth()
   const toggleButton = () => {
     setVisibility(!visible);
   };
-
+  const HandleLogout = async () => {
+    await logout()
+    window.location.href = "/login"
+  }
   const MenuItem = () => {
     const scrollTo = (id: string) => {
       const element = document.getElementById(id) as HTMLDivElement;
@@ -33,23 +37,12 @@ const Header = ({ t }: { t: TFunction }) => {
     };
     return (
       <>
-        <CustomNavLinkSmall onClick={() => scrollTo("about")}>
-          <Span>{t("About")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("mission")}>
-          <Span>{t("Mission")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("product")}>
-          <Span>{t("Product")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall
-          style={{ width: "180px" }}
-          onClick={() => scrollTo("contact")}
-        >
-          <Span>
-            <Button>{t("Contact")}</Button>
-          </Span>
-        </CustomNavLinkSmall>
+        {!user && !loading && <CustomNavLinkSmall onClick={() => window.location.href = "/login"}>
+          <Span>{t("Login / Signup")}</Span>
+        </CustomNavLinkSmall>}
+        {user && !loading && <CustomNavLinkSmall onClick={HandleLogout}>
+          <Span>{t("Logout")}</Span>
+        </CustomNavLinkSmall>}
       </>
     );
   };
