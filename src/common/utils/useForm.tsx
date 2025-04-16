@@ -2,6 +2,7 @@ import { useState } from "react";
 import { notification } from "antd";
 import axios from "axios";
 import { config } from "../../services/config";
+import { refreshUserToken } from "../../services/firebase";
 
 interface IValues {
   name: string;
@@ -36,10 +37,9 @@ export const useForm = (validate: { (values: IValues): IValues }) => {
 
     try {
       if (Object.values(errors).every((error) => error === "")) {
-        var token = localStorage.getItem("token");
-        if (token) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        }
+        
+        axios.defaults.headers.common["Authorization"] = `Bearer ${await refreshUserToken()}`;
+        
         const response = await axios.post(`${url}/email`, 
           values, 
           {

@@ -21,5 +21,10 @@ const firebaseProdConfig = {
 };
   const app = process.env.NODE_ENV === 'development' ? initializeApp(firebaseConfig) : initializeApp(firebaseProdConfig);
   const auth = getAuth(app);
-  
-  export { auth };
+  const refreshUserToken = async () => {
+    var user = auth.currentUser
+    if (user) {
+      return await user.getIdToken(true);
+    }
+  }
+  export { auth, refreshUserToken };
