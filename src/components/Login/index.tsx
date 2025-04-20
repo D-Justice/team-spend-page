@@ -53,7 +53,6 @@ export default function LoginModule() {
                 const user = userCredential.user;
                 const token = await user.getIdToken();
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-                localStorage.setItem("token", token);
                 setLogInSuccessful(true);
                 setEmail("");
                 setPassword("");
@@ -74,61 +73,70 @@ export default function LoginModule() {
                     <Title level={3} style={{ textAlign: 'center', marginBottom: '24px' }}>
                         Track Costs Better with TeamSpend
                     </Title>
-                    <Input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        size="large"
-                        style={{ marginBottom: '15px' }}
-                    />
-                    <Input.Password
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        size="large"
-                        style={{ marginBottom: '15px' }}
-                    />
 
-                    {error && (
-                        <Alert
-                            message={error}
-                            type="error"
-                            showIcon
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleLogIn();
+                        }}
+                    >
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            size="large"
                             style={{ marginBottom: '15px' }}
                         />
-                    )}
-
-                    {logInSuccessful && (
-                        <Alert
-                            message="Logged in successfully!"
-                            type="success"
-                            showIcon
+                        <Input.Password
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            size="large"
                             style={{ marginBottom: '15px' }}
                         />
-                    )}
 
-                    <Button
-                        type="primary"
-                        block
-                        onClick={handleLogIn}
-                        disabled={loadingLogIn}
-                        size="large"
-                        style={{ marginBottom: '10px' }}
-                    >
-                        {loadingLogIn ? <Spin size="small" /> : "Log In"}
-                    </Button>
+                        {error && (
+                            <Alert
+                                message={error}
+                                type="error"
+                                showIcon
+                                style={{ marginBottom: '15px' }}
+                            />
+                        )}
 
-                    <Button
-                        block
-                        onClick={handleSignUp}
-                        disabled={loadingSignUp}
-                        size="large"
-                    >
-                        {loadingSignUp ? <Spin size="small" /> : "Sign Up"}
-                    </Button>
+                        {logInSuccessful && (
+                            <Alert
+                                message="Logged in successfully!"
+                                type="success"
+                                showIcon
+                                style={{ marginBottom: '15px' }}
+                            />
+                        )}
+
+                        <Button
+                            type="primary"
+                            block
+                            htmlType="submit"
+                            disabled={loadingLogIn}
+                            size="large"
+                            style={{ marginBottom: '10px' }}
+                        >
+                            {loadingLogIn ? <Spin size="small" /> : "Log In"}
+                        </Button>
+
+                        <Button
+                            block
+                            onClick={handleSignUp}
+                            disabled={loadingSignUp}
+                            size="large"
+                        >
+                            {loadingSignUp ? <Spin size="small" /> : "Sign Up"}
+                        </Button>
+                    </form>
                 </Card>
             </Col>
         </Row>
+
     );
 }
