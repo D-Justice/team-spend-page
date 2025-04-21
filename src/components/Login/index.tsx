@@ -53,7 +53,6 @@ export default function LoginModule() {
                 const user = userCredential.user;
                 const token = await user.getIdToken();
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-                localStorage.setItem("token", token);
                 setLogInSuccessful(true);
                 setEmail("");
                 setPassword("");

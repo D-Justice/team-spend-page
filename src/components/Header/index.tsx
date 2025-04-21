@@ -3,7 +3,7 @@ import { Row, Col, Drawer } from "antd";
 import { withTranslation, TFunction } from "react-i18next";
 import Container from "../../common/Container";
 import { SvgIcon } from "../../common/SvgIcon";
-import { Button } from "../../common/Button";
+import CloseIcon from '@mui/icons-material/Close'
 import {
   HeaderSection,
   LogoContainer,
@@ -37,6 +37,9 @@ const Header = ({ t }: { t: TFunction }) => {
     };
     return (
       <>
+      {user && !loading &&<CustomNavLinkSmall onClick={() => window.location.href = "/dashboard"}>
+      <Span>{t("Dashboard")}</Span>
+      </CustomNavLinkSmall>}
         {!user && !loading && <CustomNavLinkSmall onClick={() => window.location.href = "/login"}>
           <Span>{t("Login / Signup")}</Span>
         </CustomNavLinkSmall>}
@@ -65,10 +68,9 @@ const Header = ({ t }: { t: TFunction }) => {
           <Col style={{ marginBottom: "2.5rem" }}>
             <Label onClick={toggleButton}>
               <Col span={12}>
-                <Menu>Menu</Menu>
               </Col>
               <Col span={12}>
-                <Outline />
+              <CloseIcon />
               </Col>
             </Label>
           </Col>

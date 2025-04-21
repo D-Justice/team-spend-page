@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await signOut(auth);
       setUser(null);
-      localStorage.clear()
     } catch (error) {
       console.error("Error during logout", error);
     }
