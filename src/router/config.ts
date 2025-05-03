@@ -17,6 +17,12 @@ const routes = [
     component: "Dashboard",
     protected: true,
   },
+  {
+    path: ["/subscription"],
+    exact: false,
+    component: "SubscriptionDetails",
+    protected: true,
+  },
 ];
 
 export default routes;

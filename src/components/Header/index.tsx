@@ -15,18 +15,28 @@ import {
   Outline,
   Span,
 } from "./styles";
-import { useAuth } from "../../contexts/authContext";
+import { useMsal } from "@azure/msal-react";
+import { InteractionStatus } from "@azure/msal-browser";
 
 const Header = ({ t }: { t: TFunction }) => {
+  const { instance, accounts, inProgress } = useMsal();
   const [visible, setVisibility] = useState(false);
-  const { user, loading, logout } = useAuth()
   const toggleButton = () => {
     setVisibility(!visible);
   };
   const HandleLogout = async () => {
-    await logout()
-    window.location.href = "/login"
+    const allAccounts = instance.getAllAccounts();
+
+  if (allAccounts.length > 1) {
+    instance.logoutPopup();
+  } else if (allAccounts.length === 1) {
+    instance.logout();
+  } else {
+    console.log("No accounts found to log out.");
   }
+    window.location.href = "/login"
+};
+  
   const MenuItem = () => {
     const scrollTo = (id: string) => {
       const element = document.getElementById(id) as HTMLDivElement;
@@ -37,13 +47,13 @@ const Header = ({ t }: { t: TFunction }) => {
     };
     return (
       <>
-      {user && !loading &&<CustomNavLinkSmall onClick={() => window.location.href = "/dashboard"}>
+      {accounts[0] && inProgress == InteractionStatus.None &&<CustomNavLinkSmall onClick={() => window.location.href = "/dashboard"}>
       <Span>{t("Dashboard")}</Span>
       </CustomNavLinkSmall>}
-        {!user && !loading && <CustomNavLinkSmall onClick={() => window.location.href = "/login"}>
+        {!accounts[0] && inProgress == InteractionStatus.None && <CustomNavLinkSmall onClick={() => window.location.href = "/login"}>
           <Span>{t("Login / Signup")}</Span>
         </CustomNavLinkSmall>}
-        {user && !loading && <CustomNavLinkSmall onClick={HandleLogout}>
+        {accounts[0] && inProgress == InteractionStatus.None && <CustomNavLinkSmall onClick={HandleLogout}>
           <Span>{t("Logout")}</Span>
         </CustomNavLinkSmall>}
       </>

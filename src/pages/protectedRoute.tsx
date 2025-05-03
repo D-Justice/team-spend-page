@@ -1,14 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/authContext";
+import { useMsal } from "@azure/msal-react";
+import { InteractionStatus } from "@azure/msal-browser";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    const { user, loading } = useAuth();
-  
-    if (loading) {
+  const { instance, accounts, inProgress } = useMsal();
+    if (inProgress != InteractionStatus.None) {
       return <div>Loading...</div>;
     }
   
-    if (!user) {
+    if (accounts.length == 0) {
       return <Navigate to="/login" />;
     }
   

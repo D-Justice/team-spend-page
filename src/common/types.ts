@@ -23,6 +23,7 @@ export interface InputProps {
   t: TFunction;
   type?: string;
   value?: string;
+  min?: number;
   onChange: (
     event:
       | React.ChangeEvent<HTMLInputElement>

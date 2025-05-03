@@ -4,4 +4,4 @@ export default function LoginPage() {
     return <>
     <LoginModule />
     </>
-}
+} 
