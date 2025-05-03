@@ -43,12 +43,14 @@ export default function Dashboard() {
         scopes: [config.scopes.TEAM_SPEND],
         account: accounts[0],
       });
+      return response.accessToken
       console.log("Access Token:", response.accessToken);
     } catch (error) {
       console.warn("Silent token acquisition failed. Trying popup...");
       if (error instanceof InteractionRequiredAuthError) {
         try {
           const response = await instance.acquireTokenPopup({ scopes: [config.scopes.TEAM_SPEND] });
+          return response.accessToken
           console.log("Access Token (popup):", response.accessToken);
         } catch (popupError) {
           console.error("Popup token acquisition failed:", popupError);

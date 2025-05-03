@@ -32,7 +32,7 @@ const prod: Config = {
     },
     AUTH: {
       auth: {
-        clientId: "d52837c5-a6a0-46b6-aaa1-8b820af2576a",
+        clientId: "056e2ea3-e4e8-469d-9e11-8369fb91dfb1",
         authority: "https://login.microsoftonline.com/common/v2.0",
         redirectUri: "https://www.team-spend.com/dashboard"
       },
@@ -43,7 +43,7 @@ const prod: Config = {
     },
   },
   scopes: {
-    TEAM_SPEND: "https://teamscallrecorder.onmicrosoft.com/093e700b-9436-4ad0-9986-09e17c5d3174/TeamSpend.Read.Write",
+    TEAM_SPEND: "api://056e2ea3-e4e8-469d-9e11-8369fb91dfb1/TeamSpend.Read.Write",
     USER: "User.Read"
   }
 };
