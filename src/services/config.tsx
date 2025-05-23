@@ -3,7 +3,6 @@ interface Config {
     API_URL: string;
   },
   sso: {
-    SSO_SCOPES: { scopes: string[] };
     AUTH: {
       auth: {
         clientId: string,
@@ -27,9 +26,6 @@ const prod: Config = {
     API_URL: 'https://meeting-cost.onrender.com'
   },
   sso: {
-    SSO_SCOPES: {
-      scopes: ["User.Read", "TeamSpend.Read"]
-    },
     AUTH: {
       auth: {
         clientId: "056e2ea3-e4e8-469d-9e11-8369fb91dfb1",
@@ -53,9 +49,6 @@ const dev: Config = {
     API_URL: 'https://localhost:7216'
   },
   sso: {
-    SSO_SCOPES: {
-      scopes: ["User.Read"]
-    },
     AUTH: {
       auth: {
         clientId: "f8c1f81c-89fc-4f04-96da-bce7926a0ba8",
@@ -70,7 +63,7 @@ const dev: Config = {
   },
   scopes: {
     TEAM_SPEND: "api://f8c1f81c-89fc-4f04-96da-bce7926a0ba8/TeamSpend.Read.Write",
-    USER: "User.Read"
+    USER: "User.Read.All"
   }
 };
 

@@ -18,10 +18,16 @@ const routes = [
     protected: true,
   },
   {
-    path: ["/subscription"],
+    path: ["/pricing"],
     exact: false,
-    component: "SubscriptionDetails",
-    protected: true,
+    component: "Pricing",
+    protected: false,
+  },
+  {
+    path: ["/subscription-sign-up"],
+    exact: false,
+    component: "SubscriptionSignUp",
+    protected: false,
   },
 ];
 

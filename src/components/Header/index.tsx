@@ -28,9 +28,9 @@ const Header = ({ t }: { t: TFunction }) => {
     const allAccounts = instance.getAllAccounts();
 
   if (allAccounts.length > 1) {
-    instance.logoutPopup();
+    await instance.logoutPopup();
   } else if (allAccounts.length === 1) {
-    instance.logout();
+    await instance.logout();
   } else {
     console.log("No accounts found to log out.");
   }
@@ -47,6 +47,9 @@ const Header = ({ t }: { t: TFunction }) => {
     };
     return (
       <>
+      <CustomNavLinkSmall onClick={() => window.location.href = "/pricing"}>
+      <Span>{t("Pricing")}</Span>
+      </CustomNavLinkSmall>
       {accounts[0] && inProgress == InteractionStatus.None &&<CustomNavLinkSmall onClick={() => window.location.href = "/dashboard"}>
       <Span>{t("Dashboard")}</Span>
       </CustomNavLinkSmall>}

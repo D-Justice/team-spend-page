@@ -36,3 +36,10 @@ export interface validateProps {
   employees: string;
   email: string;
 }
+export enum SubscriptionTier {
+  None,
+  Free,
+  Basic,
+  Professional,
+  Enterprise
+}

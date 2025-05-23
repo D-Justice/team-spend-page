@@ -6,20 +6,39 @@ import Router from "./router";
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { config } from "./services/config";
+import { useEffect, useState } from "react";
+import { msalInstance } from "./services/msal";
 
-const msalInstance = new PublicClientApplication(config.sso.AUTH);
-
-async function setupMsal() {
-    await msalInstance.initialize();
-}
 const App = () => {
-  setupMsal();
+  const [msalReady, setMsalReady] = useState(false);
+
+  useEffect(() => {
+    const initializeMsal = async () => {
+      try {
+        await msalInstance.initialize();
+        const accounts = msalInstance.getAllAccounts();
+        if (accounts.length > 0) {
+          msalInstance.setActiveAccount(accounts[0]);
+        }
+        setMsalReady(true);
+      } catch (error) {
+        console.error("MSAL initialization failed:", error);
+      }
+    };
+
+    initializeMsal();
+  }, []);
+
+  if (!msalReady) {
+    return <div>Loading...</div>; // Render loading until MSAL is ready
+  }
   return (
-  <MsalProvider instance={msalInstance}>
+    <MsalProvider instance={msalInstance}>
       <BrowserRouter>
         <Router />
       </BrowserRouter>
-  </MsalProvider>
-)};
+    </MsalProvider>
+  )
+};
 
 ReactDOM.render(<App />, document.getElementById("root"));

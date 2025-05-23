@@ -1,15 +1,7 @@
-import { config } from "../services/config";
-import axios from "axios";
+import apiClient from "../apiClient";
 
-export async function RequestOAuthLink(token: string) {
-  const url = config.url.API_URL;
-  await axios.get(`${url}/oauth`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  )
+export async function RequestOAuthLink() {
+  await apiClient.get(`/oauth`)
     .then(resp => {
       window.location.href = resp.data;
     });
