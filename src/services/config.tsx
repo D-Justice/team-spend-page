@@ -18,6 +18,13 @@ interface Config {
   scopes: {
     TEAM_SPEND: string,
     USER: string
+  },
+  routes: {
+    subscriptionSignUp: string,
+    pricing: string,
+    dashboard: string,
+    login: string,
+    home: string[]
   }
 }
 
@@ -41,6 +48,13 @@ const prod: Config = {
   scopes: {
     TEAM_SPEND: "api://056e2ea3-e4e8-469d-9e11-8369fb91dfb1/TeamSpend.Read.Write",
     USER: "User.Read"
+  },
+  routes: {
+    subscriptionSignUp: "/subsription-sign-up",
+    pricing: "/pricing",
+    dashboard: "/dashboard",
+    login: "/login",
+    home: ["/", "/home"]
   }
 };
 
@@ -64,6 +78,13 @@ const dev: Config = {
   scopes: {
     TEAM_SPEND: "api://f8c1f81c-89fc-4f04-96da-bce7926a0ba8/TeamSpend.Read.Write",
     USER: "User.Read.All"
+  },
+  routes: {
+    subscriptionSignUp: "/subsription-sign-up",
+    pricing: "/pricing",
+    dashboard: "/dashboard",
+    login: "/login",
+    home: ["/", "/home"]
   }
 };
 

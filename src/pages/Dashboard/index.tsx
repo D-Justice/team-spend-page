@@ -26,13 +26,15 @@ export default function Dashboard() {
     const getUserSubscriptionStatus = async () => {
       var response = await CheckUserSubscription()
       setSubscriptionStatus(response as SubscriptionTier)
+      if (response as SubscriptionTier == SubscriptionTier.None) {
+        window.location.href= config.routes.subscriptionSignUp
+      }
     }
-    if (searchParams.get("success") == "true") {
-      setOpen(true)
-    }
+    //if (searchParams.get("success") == "true") {
+    //  setOpen(true)
+    //}
     var activeUser = instance.getActiveAccount()
     if (activeUser) {
-      console.log("1")
       getUserSubscriptionStatus()
       
     }

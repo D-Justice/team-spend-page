@@ -2,18 +2,18 @@ import axios from "axios";
 import { config } from "./services/config";
 import { msalInstance } from "./services/msal";
 
-const apiClient = axios.create({
+const userApiClient = axios.create({
   baseURL: config.url.API_URL,
 });
 
-apiClient.interceptors.request.use(async (configuration) => {
+userApiClient.interceptors.request.use(async (configuration) => {
   const account = msalInstance.getActiveAccount();
 
   if (account) {
     try {
       const tokenResponse = await msalInstance.acquireTokenSilent({
         account,
-        scopes: [config.scopes.TEAM_SPEND],
+        scopes: [config.scopes.USER],
       });
       configuration.headers.Authorization = `Bearer ${tokenResponse.accessToken}`;
     } catch (err) {
@@ -26,5 +26,4 @@ apiClient.interceptors.request.use(async (configuration) => {
   return configuration;
 });
 
-
-export default apiClient;
+export default userApiClient;

@@ -4,8 +4,6 @@ import 'antd/dist/antd.min.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Router from "./router";
 import { MsalProvider } from "@azure/msal-react";
-import { PublicClientApplication } from "@azure/msal-browser";
-import { config } from "./services/config";
 import { useEffect, useState } from "react";
 import { msalInstance } from "./services/msal";
 
@@ -29,14 +27,15 @@ const App = () => {
     initializeMsal();
   }, []);
 
+  
   if (!msalReady) {
-    return <div>Loading...</div>; // Render loading until MSAL is ready
+    return <div>Loading...</div>;
   }
   return (
     <MsalProvider instance={msalInstance}>
-      <BrowserRouter>
-        <Router />
-      </BrowserRouter>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
     </MsalProvider>
   )
 };

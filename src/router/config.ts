@@ -1,30 +1,32 @@
+import { config } from "../services/config";
+
 const routes = [
   {
-    path: ["/", "/home"],
+    path: config.routes.home,
     exact: true,
     component: "Home",
     protected: false,
   },
   {
-    path: ["/login"],
+    path: [config.routes.login],
     exact: true,
     component: "Login",
     protected: false,
   },
   {
-    path: ["/dashboard"],
+    path: [config.routes.dashboard],
     exact: true,
     component: "Dashboard",
     protected: true,
   },
   {
-    path: ["/pricing"],
+    path: [config.routes.pricing],
     exact: false,
     component: "Pricing",
     protected: false,
   },
   {
-    path: ["/subscription-sign-up"],
+    path: [config.routes.subscriptionSignUp],
     exact: false,
     component: "SubscriptionSignUp",
     protected: false,

@@ -1,41 +1,42 @@
 import { useEffect, useState } from "react";
-import { Tier, tiers } from "../../data/pricingTiers";
-import { Button, Col, Dropdown, MenuProps, Row, Space } from "antd";
-import { DownOutlined } from '@ant-design/icons';
+import { Tier } from "../../data/pricingTiers";
+import { Button } from "antd";
 import { GetUserCount } from "../../requests/customer";
+import StripeWrapper from "../../components/Payment/Stripe";
+import { RetrieveTierSettings } from "../../requests/auth";
 
 export default function SubscriptionSignUp() {
-    const [option, setOption] = useState<string>("basicOption")
-    const [userCount, setUserCount] = useState<number>()
-    const [selectedTier, setSelectedTier] = useState<Tier>()
-    useEffect(() => {
-        if (option) {
-            setSelectedTier(tiers.find(x => x.option === option))
-        }
-    }, [option])
+    const [option, setOption] = useState<string>("basicOption");
+    const [userCount, setUserCount] = useState<number>(0);
+    const [selectedTier, setSelectedTier] = useState<Tier | undefined>();
+    const [tiers, setTiers] = useState<Tier[]>([]);
 
-    const items: MenuProps['items'] = [
-        {
-            label: 'Free',
-            key: 'freeOption',
-            onClick: () => setOption('freeOption')
-        },
-        {
-            label: 'Basic',
-            key: 'basicOption',
-            onClick: () => setOption('basicOption')
-        },
-        {
-            label: 'Professional',
-            key: 'professionalOption',
-            onClick: () => setOption('professionalOption')
-        },
-        {
-            label: 'Enterprise',
-            key: 'enterpriseOption',
-            onClick: () => setOption('enterpriseOption')
-        },
-    ];
+    useEffect(() => {
+        const retrieveTierSettings = async () => {
+            const fetchedTiers = await RetrieveTierSettings();
+            setTiers(fetchedTiers);
+        };
+
+        retrieveTierSettings();
+    }, []);
+
+    useEffect(() => {
+        if (option && tiers.length > 0) {
+            const tier = tiers.find(x => x.option === option);
+            setSelectedTier(tier);
+
+        }
+    }, [option, tiers]);
+
+    const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOption(e.target.value);
+    };
+
+    const handleClick = async () => {
+        const count = await GetUserCount();
+        setUserCount(count);
+    };
+
     return (
         <div
             style={{
@@ -45,29 +46,17 @@ export default function SubscriptionSignUp() {
                 padding: '2rem',
             }}
         >
-
             <div style={{ textAlign: 'center', width: '100%' }}>
                 <small className="d-block mb-2 text-white">Select subscription tier</small>
-                <Dropdown menu={{ items }} trigger={['click']}>
-                    <a
-                        onClick={e => e.preventDefault()}
-                        style={{
-                            display: 'inline-block',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '0.5rem',
-                            border: '1px solid #d9d9d9',
-                            backgroundColor: '#fff',
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                            marginBottom: '2rem',
-                        }}
-                    >
-                        <Space>
-                            {selectedTier?.name || 'Select Plan'}
-                            <DownOutlined />
-                        </Space>
-                    </a>
-                </Dropdown>
+
+                <select id="tier-select" value={option} onChange={handleDropdownChange}>
+                    {tiers.map((tier) => (
+                        <option key={tier.option} value={tier.option}>
+                            {tier.name}
+                        </option>
+                    ))}
+                </select>
+
                 <div style={{ width: "100vw", display: "flex", justifyContent: "space-between", gap: "2%" }}>
                     <div style={{ width: "49%", display: "flex", justifyContent: "center" }}>
                         {selectedTier && (
@@ -76,7 +65,7 @@ export default function SubscriptionSignUp() {
                                     <h5 className="card-title text-center fw-bold" style={{ fontSize: "1.8rem", whiteSpace: "nowrap" }}>
                                         {selectedTier.name}
                                     </h5>
-                                    <h6 className="text-center fs-4">{selectedTier.price}</h6>
+                                    <h6 className="text-center fs-4">{selectedTier.priceLabel}</h6>
                                     <p className="text-muted text-center">
                                         {selectedTier.comingSoon ? "Coming Soon" : selectedTier.subtitle}
                                     </p>
@@ -91,12 +80,13 @@ export default function SubscriptionSignUp() {
                         )}
                     </div>
 
-                    <div style={{ width: "49%", display: "flex", justifyContent: "center" }}>
-                        <Button onClick={async () => setUserCount(await GetUserCount())}>Test</Button>
-                        {userCount && <p>There are {userCount} users in your Microsoft 365 organization</p>}
+                    <StripeWrapper employeeCount={userCount} selectedTier={selectedTier?.value!} />
+
+                    <div style={{ width: "49%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                        <Button onClick={handleClick}>Get user count of organization</Button>
+                        {userCount > 0 && <p>There are {userCount} users in your Microsoft 365 organization</p>}
                     </div>
                 </div>
-
             </div>
         </div>
     );
