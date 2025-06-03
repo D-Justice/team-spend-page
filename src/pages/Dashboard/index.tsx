@@ -25,9 +25,10 @@ export default function Dashboard() {
   useEffect(() => {
     const getUserSubscriptionStatus = async () => {
       var response = await CheckUserSubscription()
+      console.log(response)
       setSubscriptionStatus(response as SubscriptionTier)
       if (response as SubscriptionTier == SubscriptionTier.None) {
-        window.location.href= config.routes.subscriptionSignUp
+        window.location.href = config.routes.subscriptionSignUp
       }
     }
     //if (searchParams.get("success") == "true") {
@@ -81,7 +82,7 @@ export default function Dashboard() {
         }
         style={{ width: "300px", margin: "0 auto" }}>App integration successful!</Alert>}
       {user && <p>Welcome, {user.name}</p>}
-      {subscriptionStatus}
+      <p>You are on the <b>{SubscriptionTier[subscriptionStatus!]}</b> subscription tier</p>
       <Button onClick={test}>Test</Button>
       <Button onClick={requestCallData}>Retrieve Call Data</Button>
       <Button onClick={requestOAuthLink}>OAuth</Button>
