@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AccountInfo, InteractionStatus } from '@azure/msal-browser';
 import { useMsal } from '@azure/msal-react';
-import { config } from '../../services/config';
-import apiClient from '../../apiClient';
 
 const SSO: React.FC = () => {
     const { instance, accounts, inProgress } = useMsal();

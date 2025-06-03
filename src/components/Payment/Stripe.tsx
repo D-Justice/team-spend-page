@@ -7,19 +7,27 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { CreateSubscription } from "../../requests/stripe";
+import { Button } from "antd";
+import { GetUserCount } from "../../requests/customer";
 
 const stripePromise = loadStripe("pk_test_51RS99I2Us93KiirWj8LlqtPgglR9cQBCUF2O89XBoVkCPM1TWn2YGMdmgbjN0rdQLXwwzVFWAxCPslQTvSsxwoVM00QNvpXyf4");
 
 interface Props {
-    employeeCount: number;
     selectedTier: number;
+    displaySelectedTier: () => JSX.Element;
+    displayTierSelector: () => JSX.Element;
 }
 
-function SubscriptionForm({ employeeCount, selectedTier }: Props) {
+function SubscriptionForm({ selectedTier, displaySelectedTier, displayTierSelector }: Props) {
     const stripe = useStripe();
     const elements = useElements();
-    const [email, setEmail] = useState("");
     const [status, setStatus] = useState("");
+    const [userCount, setUserCount] = useState<number>(0);
+
+    const handleClick = async () => {
+        const count = await GetUserCount();
+        setUserCount(count);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,8 +40,7 @@ function SubscriptionForm({ employeeCount, selectedTier }: Props) {
 
         const { paymentMethod, error } = await stripe.createPaymentMethod({
             type: "card",
-            card: cardElement,
-            billing_details: { email },
+            card: cardElement
         });
 
         if (error) {
@@ -45,11 +52,11 @@ function SubscriptionForm({ employeeCount, selectedTier }: Props) {
             const response = await CreateSubscription(
                 selectedTier,
                 paymentMethod.id,
-                employeeCount
+                userCount
             );
             console.log(response.status)
             if (response.status == "active") {
-                setStatus(`✅ Subscription created: ${response.id}`);
+                setStatus(`✅ Subscription created!`);
             } else {
                 setStatus(response.message || "❌ Subscription failed");
             }
@@ -75,21 +82,13 @@ function SubscriptionForm({ employeeCount, selectedTier }: Props) {
             }}
         >
             <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>Subscribe</h3>
+            {displayTierSelector()}
+            {<>{displaySelectedTier()}</>}
 
-            <input
-                type="email"
-                placeholder="Your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
-                    fontSize: "1rem"
-                }}
-            />
-
+            <div style={{ width: "49%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Button onClick={handleClick}>Get user count of organization</Button>
+                {userCount > 0 && <p>There are {userCount} users in your Microsoft 365 organization</p>}
+            </div>
             <div
                 style={{
                     padding: "0.75rem",
@@ -103,7 +102,7 @@ function SubscriptionForm({ employeeCount, selectedTier }: Props) {
 
             <button
                 type="submit"
-                disabled={!stripe || employeeCount <= 0}
+                disabled={!stripe || userCount <= 0}
                 style={{
                     backgroundColor: "#4CAF50",
                     color: "white",
@@ -122,10 +121,10 @@ function SubscriptionForm({ employeeCount, selectedTier }: Props) {
     );
 }
 
-export default function StripeWrapper({ employeeCount, selectedTier }: Props) {
+export default function StripeWrapper({ selectedTier, displaySelectedTier, displayTierSelector }: Props) {
     return (
         <Elements stripe={stripePromise}>
-            <SubscriptionForm employeeCount={employeeCount} selectedTier={selectedTier} />
+            <SubscriptionForm selectedTier={selectedTier} displaySelectedTier={displaySelectedTier} displayTierSelector={displayTierSelector} />
         </Elements>
     );
 }
